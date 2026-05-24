@@ -30,7 +30,9 @@ def parse_args() -> argparse.Namespace:
     """Parse command-line arguments for NetLogo summary generation."""
     parser = argparse.ArgumentParser(description="Summarise cleaned NetLogo reference CSV.")
     parser.add_argument("input", type=Path)
-    parser.add_argument("--output", type=Path, default=Path("results/netlogo/summary.csv"))
+    parser.add_argument(
+        "--output", type=Path, default=Path("results/netlogo/full/replication_summary.csv")
+    )
     return parser.parse_args()
 
 

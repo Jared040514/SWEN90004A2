@@ -70,7 +70,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--output-dir",
         type=Path,
-        default=Path("results/snapshots"),
+        default=Path("results/python/snapshots"),
         help="Directory where snap_t####.svg files are written.",
     )
     parser.add_argument(

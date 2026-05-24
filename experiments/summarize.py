@@ -37,7 +37,7 @@ def parse_args() -> argparse.Namespace:
     """Parse command-line arguments for CSV summarisation."""
     parser = argparse.ArgumentParser(description="Summarise segregation experiment CSV output.")
     parser.add_argument("input", type=Path)
-    parser.add_argument("--output", type=Path, default=Path("results/summary.csv"))
+    parser.add_argument("--output", type=Path, default=Path("results/python/full/summary.csv"))
     return parser.parse_args()
 
 

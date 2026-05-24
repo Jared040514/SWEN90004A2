@@ -15,7 +15,9 @@ def parse_args() -> argparse.Namespace:
     """Parse command-line arguments for NetLogo table conversion."""
     parser = argparse.ArgumentParser(description="Convert NetLogo BehaviorSpace table CSV.")
     parser.add_argument("input", type=Path)
-    parser.add_argument("--output", type=Path, default=Path("results/netlogo/reference_clean.csv"))
+    parser.add_argument(
+        "--output", type=Path, default=Path("results/netlogo/full/replication.csv")
+    )
     return parser.parse_args()
 
 

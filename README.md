@@ -1,13 +1,33 @@
 # SWEN90004 Assignment 2 Code
 
 This repository contains a standard-library-only Python implementation of the
-NetLogo Segregation model and the proposed income/rent extension.
+NetLogo Segregation model and the proposed income/rent extension, together with
+matching NetLogo reference runs used for replication validation.
 
 ## Requirements
 
 - Python 3.14, or a recent Python 3 version for development.
 - No third-party packages are required.
 - No IDE, build tool, or package manager is required.
+- NetLogo 7.0.4 headless for regenerating reference data (Track B only).
+
+## Repository layout
+
+```
+segregation/         Python model package
+experiments/         Batch runners, summary, plotting, snapshot utilities
+netlogo/             NetLogo Segregation.nlogox + BehaviorSpace XML configs
+results/
+├── python/          All Python-side outputs (mirror of netlogo/ where applicable)
+│   ├── full/        30-rep parameter sweep CSVs + summaries
+│   ├── smoke/       Fast 1-rep verification CSVs
+│   ├── snapshots/   Per-config SVG snapshots (snap_t####.svg / snap_final_t####.svg)
+│   └── trajectories/ Per-tick CSVs for a few representative configs
+└── netlogo/         All NetLogo-side outputs (mirror of python/ where applicable)
+    ├── full/        30-rep BehaviorSpace sweep, cleaned + summary
+    ├── snapshots/   Per-config SVG + PNG snapshots (snap_final.svg)
+    └── raw/         BehaviorSpace table exports (pre-cleaning)
+```
 
 ## Run One Simulation
 
@@ -18,7 +38,7 @@ python3 main.py \
   --density 80 \
   --similar-wanted 30 \
   --seed 1 \
-  --output results/baseline.csv
+  --output results/python/baseline.csv
 ```
 
 Extension run:
@@ -30,7 +50,7 @@ python3 main.py \
   --similar-wanted 30 \
   --income-gap 0.5 \
   --seed 2 \
-  --output results/extension.csv
+  --output results/python/extension.csv
 ```
 
 Useful options:
@@ -50,7 +70,7 @@ Replication sweep from the proposal:
 python3 experiments/runner.py \
   --experiment replication \
   --repetitions 30 \
-  --out-dir results
+  --out-dir results/python/full
 ```
 
 Extension treatments from the proposal:
@@ -59,7 +79,7 @@ Extension treatments from the proposal:
 python3 experiments/runner.py \
   --experiment extension \
   --repetitions 30 \
-  --out-dir results
+  --out-dir results/python/full
 ```
 
 For a quick smoke test:
@@ -70,31 +90,40 @@ python3 experiments/runner.py \
   --repetitions 1 \
   --max-ticks 20 \
   --final-only \
-  --out-dir results/smoke
+  --out-dir results/python/smoke
 ```
 
 ## Summaries and Figures
 
-Create a summary table from an experiment CSV:
+Create a summary table from an experiment CSV (Python side):
 
 ```bash
 python3 experiments/summarize.py \
-  results/replication.csv \
-  --output results/replication_summary.csv
+  results/python/full/replication.csv \
+  --output results/python/full/replication_summary.csv
 ```
 
 Create a simple SVG line chart from a summary CSV:
 
 ```bash
 python3 experiments/plotting.py \
-  results/replication_summary.csv \
+  results/python/full/replication_summary.csv \
   --x similar_wanted \
   --y percent_similar_mean \
   --group density \
-  --output results/replication_percent_similar.svg
+  --output results/python/replication_percent_similar.svg
 ```
 
-## NetLogo Reference Data
+Render Python spatial snapshots:
+
+```bash
+python3 experiments/snapshot.py \
+  --mode baseline --density 80 --similar-wanted 30 --seed 1 \
+  --snap-at 0,3,7,15 --also-final \
+  --output-dir results/python/snapshots/baseline_d80_s30
+```
+
+## NetLogo Reference Data (Track B)
 
 Track B uses NetLogo 7 headless BehaviorSpace to generate reference data from
 the original model in `netlogo/Segregation.nlogox`.
@@ -106,7 +135,7 @@ Full reference sweep:
   --model netlogo/Segregation.nlogox \
   --setup-file netlogo/segregation_reference.xml \
   --experiment segregation-reference \
-  --table results/netlogo/segregation_reference_table.csv \
+  --table results/netlogo/raw/reference_table.csv \
   --threads 4
 ```
 
@@ -114,16 +143,16 @@ Convert the raw BehaviorSpace table to a normal CSV:
 
 ```bash
 python3 experiments/convert_netlogo_table.py \
-  results/netlogo/segregation_reference_table.csv \
-  --output results/netlogo/segregation_reference_clean.csv
+  results/netlogo/raw/reference_table.csv \
+  --output results/netlogo/full/replication.csv
 ```
 
 Summarise the NetLogo reference runs:
 
 ```bash
 python3 experiments/summarize_netlogo.py \
-  results/netlogo/segregation_reference_clean.csv \
-  --output results/netlogo/segregation_reference_summary.csv
+  results/netlogo/full/replication.csv \
+  --output results/netlogo/full/replication_summary.csv
 ```
 
 Generate NetLogo-derived spatial snapshots:
@@ -133,22 +162,25 @@ Generate NetLogo-derived spatial snapshots:
   --model netlogo/Segregation.nlogox \
   --setup-file netlogo/segregation_snapshot_data.xml \
   --experiment segregation-snapshot-data \
-  --table results/netlogo/snapshot_data_table.csv \
+  --table results/netlogo/raw/snapshot_data_table.csv \
   --threads 1
 
 python3 experiments/render_netlogo_snapshots.py \
-  results/netlogo/snapshot_data_table.csv \
-  --out-dir results/netlogo/screenshots
+  results/netlogo/raw/snapshot_data_table.csv \
+  --out-dir results/netlogo/snapshots
 ```
+
+This emits one `snap_final.svg` under `results/netlogo/snapshots/baseline_d<D>_s<S>/`
+per cell, mirroring the Python snapshot layout.
 
 Already generated Track B artifacts are kept under `results/netlogo/`:
 
-- `segregation_reference_table.csv`: raw BehaviorSpace output.
-- `segregation_reference_clean.csv`: one clean row per NetLogo run.
-- `segregation_reference_summary.csv`: mean and 95% CI by parameter cell.
-- `snapshot_data_table.csv`: final turtle coordinates for representative runs.
-- `screenshots/*.svg`: NetLogo-derived final-state spatial snapshots.
-- `screenshots/png/*.png`: PNG versions for direct report insertion.
+- `raw/reference_table.csv`: raw BehaviorSpace output.
+- `raw/snapshot_data_table.csv`: final turtle coordinates for representative runs.
+- `full/replication.csv`: one clean row per NetLogo run.
+- `full/replication_summary.csv`: mean and 95% CI by parameter cell.
+- `snapshots/baseline_d<D>_s<S>/snap_final.svg`: NetLogo-derived final-state SVGs.
+- `snapshots/baseline_d<D>_s<S>/png/snap_final.png`: PNG versions for report insertion.
 
 ## Model Notes
 

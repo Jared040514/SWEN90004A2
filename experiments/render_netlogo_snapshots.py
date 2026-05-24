@@ -25,7 +25,7 @@ def parse_args() -> argparse.Namespace:
     """Parse command-line arguments for snapshot rendering."""
     parser = argparse.ArgumentParser(description="Render NetLogo snapshot SVGs.")
     parser.add_argument("input", type=Path)
-    parser.add_argument("--out-dir", type=Path, default=Path("results/netlogo/screenshots"))
+    parser.add_argument("--out-dir", type=Path, default=Path("results/netlogo/snapshots"))
     return parser.parse_args()
 
 
@@ -54,7 +54,8 @@ def render_snapshot(row: dict[str, str], out_dir: Path) -> Path:
     turtles = parse_turtles(row[turtle_field])
     density = row["density"]
     similar = row["%-similar-wanted"]
-    output_path = out_dir / f"netlogo-density-{density}-similar-{similar}.svg"
+    # Mirror the Python snapshot layout: results/<lang>/snapshots/baseline_d<D>_s<S>/snap_final.svg.
+    output_path = out_dir / f"baseline_d{density}_s{similar}" / "snap_final.svg"
     output_path.parent.mkdir(parents=True, exist_ok=True)
 
     cell = 8

@@ -33,7 +33,7 @@ def parse_args() -> argparse.Namespace:
         choices=("replication", "extension", "all"),
         default="replication",
     )
-    parser.add_argument("--out-dir", type=Path, default=Path("results"))
+    parser.add_argument("--out-dir", type=Path, default=Path("results/python/full"))
     parser.add_argument("--repetitions", type=int, default=30)
     parser.add_argument("--max-ticks", type=int, default=10_000)
     parser.add_argument("--seed", type=int, default=10_000)

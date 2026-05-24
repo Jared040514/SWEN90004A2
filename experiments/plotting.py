@@ -19,7 +19,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--x", default="similar_wanted")
     parser.add_argument("--y", default="percent_similar_mean")
     parser.add_argument("--group", default="density")
-    parser.add_argument("--output", type=Path, default=Path("results/chart.svg"))
+    parser.add_argument("--output", type=Path, default=Path("results/python/chart.svg"))
     return parser.parse_args()
 
 
