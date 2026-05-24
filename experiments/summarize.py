@@ -81,6 +81,8 @@ def summarise(input_path: Path, output_path: Path) -> None:
         "income_gap",
         "use_affordability",
         "n",
+        "n_converged",
+        "convergence_rate",
     ]
     for metric in SUMMARY_METRICS:
         fieldnames.extend([f"{metric}_mean", f"{metric}_ci95"])
@@ -90,13 +92,20 @@ def summarise(input_path: Path, output_path: Path) -> None:
         writer.writeheader()
         for key, group in sorted(grouped.items()):
             treatment, density, similar_wanted, income_gap, use_affordability = key
+            n = len(group)
+            # Count runs that reached the natural "all agents happy" halting condition,
+            # excluding those capped at max_ticks or stalled.
+            n_converged = sum(1 for row in group if row.get("termination_reason") == "converged")
+            convergence_rate = n_converged / n if n else 0.0
             summary: dict[str, str | int] = {
                 "treatment": treatment,
                 "density": density,
                 "similar_wanted": similar_wanted,
                 "income_gap": income_gap,
                 "use_affordability": use_affordability,
-                "n": len(group),
+                "n": n,
+                "n_converged": n_converged,
+                "convergence_rate": f"{convergence_rate:.6f}",
             }
             for metric in SUMMARY_METRICS:
                 values = [float(row[metric]) for row in group if row.get(metric)]
