@@ -1,0 +1,3 @@
+run_id,repetition,treatment,mode,seed,tick,size,density,similar_wanted,income_gap,use_affordability,population,unhappy_count,percent_similar,percent_unhappy,moved_count,stuck_unhappy,stuck_unhappy_fraction,no_movement_ticks,converged,termination_reason,isolation_blue,isolation_orange,dissimilarity,mean_rent_blue,mean_rent_orange
+single,0,,extension,1001,0,51,80.0,0.0,1.0,true,2109,212,49.555329,10.052157,0,0,0.000000,0,false,running,50.115340,48.982601,0.188339,28.554589,29.001306
+single,0,,extension,1001,1,51,80.0,0.0,1.0,true,2109,0,50.540806,0.000000,212,0,0.000000,0,true,converged,49.764588,51.293402,0.219649,27.286155,24.263812

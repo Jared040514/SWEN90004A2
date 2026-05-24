@@ -1,0 +1,7 @@
+run_id,repetition,treatment,mode,seed,tick,size,density,similar_wanted,income_gap,use_affordability,population,unhappy_count,percent_similar,percent_unhappy,moved_count,stuck_unhappy,stuck_unhappy_fraction,no_movement_ticks,converged,termination_reason,isolation_blue,isolation_orange,dissimilarity,mean_rent_blue,mean_rent_orange
+single,0,,baseline,1002,0,51,80.0,15.0,0.0,true,2081,69,49.962310,3.315714,0,0,0.000000,0,false,running,49.274033,50.632158,0.180071,0.000000,0.000000
+single,0,,baseline,1002,1,51,80.0,15.0,0.0,true,2081,27,52.239928,1.297453,59,0,0.000000,0,false,running,51.651195,52.814496,0.192126,0.000000,0.000000
+single,0,,baseline,1002,2,51,80.0,15.0,0.0,true,2081,11,53.285220,0.528592,25,0,0.000000,0,false,running,52.831334,53.730454,0.196978,0.000000,0.000000
+single,0,,baseline,1002,3,51,80.0,15.0,0.0,true,2081,7,53.641288,0.336377,10,0,0.000000,0,false,running,53.183407,54.090300,0.201190,0.000000,0.000000
+single,0,,baseline,1002,4,51,80.0,15.0,0.0,true,2081,2,53.824149,0.096108,7,0,0.000000,0,false,running,53.424450,54.217047,0.200214,0.000000,0.000000
+single,0,,baseline,1002,5,51,80.0,15.0,0.0,true,2081,0,53.944595,0.000000,2,0,0.000000,0,true,converged,53.517702,54.363718,0.201160,0.000000,0.000000

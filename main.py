@@ -17,7 +17,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--similar-wanted", type=float, default=30.0)
     parser.add_argument("--seed", type=int, default=1)
     parser.add_argument("--max-ticks", type=int, default=10_000)
-    parser.add_argument("--output", type=Path, default=Path("results/single_run.csv"))
+    parser.add_argument("--output", type=Path, default=Path("results/python/single_run.csv"))
     parser.add_argument("--final-only", action="store_true")
     parser.add_argument("--income-gap", type=float, default=0.0)
     parser.add_argument("--disable-affordability", action="store_true")

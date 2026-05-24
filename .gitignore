@@ -1,3 +1,12 @@
 __pycache__/
 *.pyc
-results/
+
+# Volatile partial captures preserved locally for forensics only.
+results/python/full_pertick_partial/
+
+# Local cross-implementation scratch (NetLogo vs Python PNG/SVG previews).
+_compare/
+
+# Default outputs of ad-hoc / single-run helpers; users override via --output.
+results/python/single_run.csv
+results/python/chart.svg
