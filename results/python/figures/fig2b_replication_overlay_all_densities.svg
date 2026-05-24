@@ -44,19 +44,28 @@
 <text x="380.0" y="444" text-anchor="middle" font-family="Arial" font-size="14">%-similar-wanted  (n=30 per cell)</text>
 <text x="18" y="230.0" text-anchor="middle" transform="rotate(-90 18 230.0)" font-family="Arial" font-size="14">percent_similar mean  (Python vs NetLogo)</text>
 <polyline points="127.00,370.23 182.00,340.00 237.00,311.53 292.00,236.48 347.00,182.02 402.00,175.06 457.00,119.90 512.00,118.01 567.00,68.61 622.00,56.02 677.00,39.98 732.00,31.04" fill="none" stroke="#2563eb" stroke-width="2"/>
-<text x="580" y="28" font-family="Arial" font-size="13" fill="#2563eb">NL d=70</text>
 <polyline points="127.00,368.86 182.00,345.68 237.00,329.75 292.00,233.25 347.00,199.79 402.00,170.35 457.00,123.68 512.00,126.01 567.00,73.57 622.00,52.68 677.00,41.89 732.00,31.48" fill="none" stroke="#dc2626" stroke-width="2"/>
-<text x="580" y="46" font-family="Arial" font-size="13" fill="#dc2626">NL d=80</text>
 <polyline points="127.00,364.56 182.00,352.89 237.00,350.54 292.00,220.65 347.00,208.71 402.00,162.02 457.00,127.88 512.00,127.48 567.00,71.24 622.00,42.91 677.00,40.26 732.00,30.96" fill="none" stroke="#16a34a" stroke-width="2"/>
-<text x="580" y="64" font-family="Arial" font-size="13" fill="#16a34a">NL d=90</text>
 <polyline points="127.00,359.62 182.00,358.16 237.00,360.71 292.00,216.25 347.00,211.02 402.00,151.26 457.00,127.21 512.00,128.28 567.00,60.15 622.00,36.18 677.00,35.44 732.00,32.31" fill="none" stroke="#9333ea" stroke-width="2"/>
-<text x="580" y="82" font-family="Arial" font-size="13" fill="#9333ea">NL d=95</text>
 <polyline points="127.00,371.14 182.00,341.46 237.00,310.85 292.00,233.73 347.00,184.83 402.00,172.99 457.00,119.55 512.00,119.66 567.00,67.84 622.00,55.42 677.00,40.37 732.00,31.20" fill="none" stroke="#f59e0b" stroke-width="2"/>
-<text x="580" y="100" font-family="Arial" font-size="13" fill="#f59e0b">Py d=70</text>
 <polyline points="127.00,370.70 182.00,342.03 237.00,328.77 292.00,234.28 347.00,198.26 402.00,173.76 457.00,124.26 512.00,124.06 567.00,73.72 622.00,52.41 677.00,41.99 732.00,31.55" fill="none" stroke="#0f766e" stroke-width="2"/>
-<text x="580" y="118" font-family="Arial" font-size="13" fill="#0f766e">Py d=80</text>
-<polyline points="127.00,364.45 182.00,353.56 237.00,348.81 292.00,222.05 347.00,208.61 402.00,161.99 457.00,129.37 512.00,127.50 567.00,72.68 622.00,43.56 677.00,40.39 732.00,30.91" fill="none" stroke="#2563eb" stroke-width="2"/>
-<text x="580" y="136" font-family="Arial" font-size="13" fill="#2563eb">Py d=90</text>
-<polyline points="127.00,359.08 182.00,358.44 237.00,360.12 292.00,216.14 347.00,210.38 402.00,152.46 457.00,129.91 512.00,128.60 567.00,61.18 622.00,35.69 677.00,35.22 732.00,32.06" fill="none" stroke="#dc2626" stroke-width="2"/>
-<text x="580" y="154" font-family="Arial" font-size="13" fill="#dc2626">Py d=95</text>
+<polyline points="127.00,364.45 182.00,353.56 237.00,348.81 292.00,222.05 347.00,208.61 402.00,161.99 457.00,129.37 512.00,127.50 567.00,72.68 622.00,43.56 677.00,40.39 732.00,30.91" fill="none" stroke="#0891b2" stroke-width="2"/>
+<polyline points="127.00,359.08 182.00,358.44 237.00,360.12 292.00,216.14 347.00,210.38 402.00,152.46 457.00,129.91 512.00,128.60 567.00,61.18 622.00,35.69 677.00,35.22 732.00,32.06" fill="none" stroke="#be185d" stroke-width="2"/>
+<rect x="78" y="32" width="110" height="138" fill="white" fill-opacity="0.85" stroke="#d4d4d4" stroke-width="0.5" rx="3"/>
+<line x1="82" y1="42" x2="100" y2="42" stroke="#2563eb" stroke-width="2.5"/>
+<text x="108" y="46" font-family="Arial" font-size="12" fill="#111827">NL d=70</text>
+<line x1="82" y1="58" x2="100" y2="58" stroke="#dc2626" stroke-width="2.5"/>
+<text x="108" y="62" font-family="Arial" font-size="12" fill="#111827">NL d=80</text>
+<line x1="82" y1="74" x2="100" y2="74" stroke="#16a34a" stroke-width="2.5"/>
+<text x="108" y="78" font-family="Arial" font-size="12" fill="#111827">NL d=90</text>
+<line x1="82" y1="90" x2="100" y2="90" stroke="#9333ea" stroke-width="2.5"/>
+<text x="108" y="94" font-family="Arial" font-size="12" fill="#111827">NL d=95</text>
+<line x1="82" y1="106" x2="100" y2="106" stroke="#f59e0b" stroke-width="2.5"/>
+<text x="108" y="110" font-family="Arial" font-size="12" fill="#111827">Py d=70</text>
+<line x1="82" y1="122" x2="100" y2="122" stroke="#0f766e" stroke-width="2.5"/>
+<text x="108" y="126" font-family="Arial" font-size="12" fill="#111827">Py d=80</text>
+<line x1="82" y1="138" x2="100" y2="138" stroke="#0891b2" stroke-width="2.5"/>
+<text x="108" y="142" font-family="Arial" font-size="12" fill="#111827">Py d=90</text>
+<line x1="82" y1="154" x2="100" y2="154" stroke="#be185d" stroke-width="2.5"/>
+<text x="108" y="158" font-family="Arial" font-size="12" fill="#111827">Py d=95</text>
 </svg>

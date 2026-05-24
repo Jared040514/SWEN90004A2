@@ -44,7 +44,10 @@
 <text x="380.0" y="444" text-anchor="middle" font-family="Arial" font-size="14">%-similar-wanted  (density=80, n=30 per cell)</text>
 <text x="18" y="230.0" text-anchor="middle" transform="rotate(-90 18 230.0)" font-family="Arial" font-size="14">percent_similar mean  (Python vs NetLogo)</text>
 <polyline points="127.00,368.86 182.00,345.68 237.00,329.75 292.00,233.25 347.00,199.79 402.00,170.35 457.00,123.68 512.00,126.01 567.00,73.57 622.00,52.68 677.00,41.89 732.00,31.48" fill="none" stroke="#2563eb" stroke-width="2"/>
-<text x="580" y="28" font-family="Arial" font-size="13" fill="#2563eb">NetLogo</text>
 <polyline points="127.00,370.70 182.00,342.03 237.00,328.77 292.00,234.28 347.00,198.26 402.00,173.76 457.00,124.26 512.00,124.06 567.00,73.72 622.00,52.41 677.00,41.99 732.00,31.55" fill="none" stroke="#dc2626" stroke-width="2"/>
-<text x="580" y="46" font-family="Arial" font-size="13" fill="#dc2626">Python</text>
+<rect x="78" y="32" width="110" height="42" fill="white" fill-opacity="0.85" stroke="#d4d4d4" stroke-width="0.5" rx="3"/>
+<line x1="82" y1="42" x2="100" y2="42" stroke="#2563eb" stroke-width="2.5"/>
+<text x="108" y="46" font-family="Arial" font-size="12" fill="#111827">NetLogo</text>
+<line x1="82" y1="58" x2="100" y2="58" stroke="#dc2626" stroke-width="2.5"/>
+<text x="108" y="62" font-family="Arial" font-size="12" fill="#111827">Python</text>
 </svg>

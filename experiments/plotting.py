@@ -9,8 +9,14 @@ from collections import defaultdict
 from pathlib import Path
 
 
-# Small fixed colour set used for SVG line charts.
-SERIES_COLOURS = ("#2563eb", "#dc2626", "#16a34a", "#9333ea", "#f59e0b", "#0f766e")
+# Categorical colour set used for SVG line charts.  Twelve well-separated hues
+# so charts with up to a dozen series do not repeat colours; the first six are
+# the original report palette and the remaining six extend it for crowded plots
+# (e.g. the 8-series Python-vs-NetLogo across-density overlay).
+SERIES_COLOURS = (
+    "#2563eb", "#dc2626", "#16a34a", "#9333ea", "#f59e0b", "#0f766e",
+    "#0891b2", "#be185d", "#65a30d", "#b45309", "#4338ca", "#9f1239",
+)
 
 # Light grey used for axis grid lines drawn behind data series.
 GRID_COLOUR = "#e5e7eb"
@@ -189,15 +195,43 @@ def write_svg_line_chart(
         f'font-family="Arial" font-size="14">{y_label}</text>'
     )
 
-    for index, (label, points) in enumerate(sorted(series.items())):
+    # Draw the data series.  Colour cycles through SERIES_COLOURS in label-sort
+    # order so series are visually stable across re-renders.
+    sorted_items = sorted(series.items())
+    for index, (label, points) in enumerate(sorted_items):
         colour = SERIES_COLOURS[index % len(SERIES_COLOURS)]
         path = " ".join(f"{sx(x):.2f},{sy(y):.2f}" for x, y in points)
         lines.append(f'<polyline points="{path}" fill="none" stroke="{colour}" stroke-width="2"/>')
-        legend_y = margin_top + 18 * index
+
+    # Render a legend box in the top-left corner where Schelling-style curves
+    # leave whitespace.  Width is sized to the longest label so the box does
+    # not clip; line-height keeps swatches and text aligned.
+    legend_x = margin_left + 10
+    legend_top = margin_top + 8
+    line_height = 16
+    swatch_length = 18
+    text_offset = 26
+    longest_label = max((len(label) for label in series.keys()), default=8)
+    legend_width = max(110, longest_label * 7 + text_offset + 12)
+    legend_height = line_height * len(sorted_items) + 10
+    lines.append(
+        f'<rect x="{legend_x - 4}" y="{legend_top - 4}" '
+        f'width="{legend_width}" height="{legend_height}" '
+        f'fill="white" fill-opacity="0.85" stroke="#d4d4d4" stroke-width="0.5" rx="3"/>'
+    )
+    for index, (label, _points) in enumerate(sorted_items):
+        colour = SERIES_COLOURS[index % len(SERIES_COLOURS)]
+        swatch_y = legend_top + 6 + line_height * index
+        text_y = swatch_y + 4
         lines.append(
-            f'<text x="{width - 180}" y="{legend_y}" font-family="Arial" '
-            f'font-size="13" fill="{colour}">{label}</text>'
+            f'<line x1="{legend_x}" y1="{swatch_y}" x2="{legend_x + swatch_length}" '
+            f'y2="{swatch_y}" stroke="{colour}" stroke-width="2.5"/>'
         )
+        lines.append(
+            f'<text x="{legend_x + text_offset}" y="{text_y}" '
+            f'font-family="Arial" font-size="12" fill="#111827">{label}</text>'
+        )
+
     lines.append("</svg>")
 
     output_path.parent.mkdir(parents=True, exist_ok=True)
