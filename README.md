@@ -94,6 +94,62 @@ python3 experiments/plotting.py \
   --output results/replication_percent_similar.svg
 ```
 
+## NetLogo Reference Data
+
+Track B uses NetLogo 7 headless BehaviorSpace to generate reference data from
+the original model in `netlogo/Segregation.nlogox`.
+
+Full reference sweep:
+
+```bash
+"/path/to/NetLogo 7.0.4/netlogo-headless.sh" \
+  --model netlogo/Segregation.nlogox \
+  --setup-file netlogo/segregation_reference.xml \
+  --experiment segregation-reference \
+  --table results/netlogo/segregation_reference_table.csv \
+  --threads 4
+```
+
+Convert the raw BehaviorSpace table to a normal CSV:
+
+```bash
+python3 experiments/convert_netlogo_table.py \
+  results/netlogo/segregation_reference_table.csv \
+  --output results/netlogo/segregation_reference_clean.csv
+```
+
+Summarise the NetLogo reference runs:
+
+```bash
+python3 experiments/summarize_netlogo.py \
+  results/netlogo/segregation_reference_clean.csv \
+  --output results/netlogo/segregation_reference_summary.csv
+```
+
+Generate NetLogo-derived spatial snapshots:
+
+```bash
+"/path/to/NetLogo 7.0.4/netlogo-headless.sh" \
+  --model netlogo/Segregation.nlogox \
+  --setup-file netlogo/segregation_snapshot_data.xml \
+  --experiment segregation-snapshot-data \
+  --table results/netlogo/snapshot_data_table.csv \
+  --threads 1
+
+python3 experiments/render_netlogo_snapshots.py \
+  results/netlogo/snapshot_data_table.csv \
+  --out-dir results/netlogo/screenshots
+```
+
+Already generated Track B artifacts are kept under `results/netlogo/`:
+
+- `segregation_reference_table.csv`: raw BehaviorSpace output.
+- `segregation_reference_clean.csv`: one clean row per NetLogo run.
+- `segregation_reference_summary.csv`: mean and 95% CI by parameter cell.
+- `snapshot_data_table.csv`: final turtle coordinates for representative runs.
+- `screenshots/*.svg`: NetLogo-derived final-state spatial snapshots.
+- `screenshots/png/*.png`: PNG versions for direct report insertion.
+
 ## Model Notes
 
 The baseline model uses a 51 x 51 wrapped grid. Initial patches are populated
