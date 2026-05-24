@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<experiments>
+  <experiment
+      name="segregation-reference-smoke"
+      repetitions="1"
+      sequentialRunOrder="true"
+      runMetricsEveryStep="false"
+      timeLimit="1000">
+    <setup>setup</setup>
+    <go>go</go>
+    <metrics>
+      <metric>ticks</metric>
+      <metric>count turtles</metric>
+      <metric>percent-similar</metric>
+      <metric>percent-unhappy</metric>
+      <metric>count turtles with [not happy?]</metric>
+    </metrics>
+    <constants>
+      <enumeratedValueSet variable="visualization">
+        <value value="&quot;old&quot;"></value>
+      </enumeratedValueSet>
+      <enumeratedValueSet variable="density">
+        <value value="80"></value>
+      </enumeratedValueSet>
+      <enumeratedValueSet variable="%-similar-wanted">
+        <value value="30"></value>
+      </enumeratedValueSet>
+    </constants>
+  </experiment>
+</experiments>
