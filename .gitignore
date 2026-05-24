@@ -1,3 +1,6 @@
 __pycache__/
 *.pyc
-results/
+
+# Ignore the partial per-tick replication data captured before we switched to
+# --final-only on the full sweep; preserved locally for forensics, not for sharing.
+results/full_pertick_partial/
