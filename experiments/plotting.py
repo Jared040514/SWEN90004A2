@@ -4,12 +4,56 @@ from __future__ import annotations
 
 import argparse
 import csv
+import math
 from collections import defaultdict
 from pathlib import Path
 
 
-# Small fixed colour set used for SVG line charts.
-SERIES_COLOURS = ("#2563eb", "#dc2626", "#16a34a", "#9333ea", "#f59e0b", "#0f766e")
+# Categorical colour set used for SVG line charts.  Twelve well-separated hues
+# so charts with up to a dozen series do not repeat colours; the first six are
+# the original report palette and the remaining six extend it for crowded plots
+# (e.g. the 8-series Python-vs-NetLogo across-density overlay).
+SERIES_COLOURS = (
+    "#2563eb", "#dc2626", "#16a34a", "#9333ea", "#f59e0b", "#0f766e",
+    "#0891b2", "#be185d", "#65a30d", "#b45309", "#4338ca", "#9f1239",
+)
+
+# Light grey used for axis grid lines drawn behind data series.
+GRID_COLOUR = "#e5e7eb"
+
+
+def _nice_step(raw_step: float) -> float:
+    """Round a candidate axis step to a visually clean increment (1, 2, 5, 10, ...)."""
+    if raw_step <= 0:
+        return 1.0
+    exponent = math.floor(math.log10(raw_step))
+    fraction = raw_step / (10 ** exponent)
+    if fraction < 1.5:
+        nice = 1.0
+    elif fraction < 3.0:
+        nice = 2.0
+    elif fraction < 7.0:
+        nice = 5.0
+    else:
+        nice = 10.0
+    return nice * (10 ** exponent)
+
+
+def _nice_ticks(min_val: float, max_val: float, target_count: int = 5) -> list[float]:
+    """Return tick values at clean intervals spanning [min_val, max_val]."""
+    if max_val == min_val:
+        return [min_val]
+    raw_step = (max_val - min_val) / max(1, target_count - 1)
+    step = _nice_step(raw_step)
+    first = math.floor(min_val / step) * step
+    last = math.ceil(max_val / step) * step
+    ticks: list[float] = []
+    value = first
+    # Small tolerance avoids float-rounding glitches at the upper bound.
+    while value <= last + step * 0.5:
+        ticks.append(value)
+        value += step
+    return ticks
 
 
 def parse_args() -> argparse.Namespace:
@@ -68,6 +112,15 @@ def write_svg_line_chart(
     if min_y == max_y:
         max_y += 1.0
 
+    # Compute nice tick locations and expand the axis bounds to the tick endpoints
+    # so the gridlines fall exactly on the plot edges.
+    x_ticks = _nice_ticks(min_x, max_x)
+    y_ticks = _nice_ticks(min_y, max_y)
+    min_x = min(min_x, x_ticks[0])
+    max_x = max(max_x, x_ticks[-1])
+    min_y = min(min_y, y_ticks[0])
+    max_y = max(max_y, y_ticks[-1])
+
     def sx(value: float) -> float:
         """Scale an x value into SVG coordinates."""
         span = width - margin_left - margin_right
@@ -78,29 +131,107 @@ def write_svg_line_chart(
         span = height - margin_top - margin_bottom
         return height - margin_bottom - (value - min_y) / (max_y - min_y) * span
 
+    bottom = height - margin_bottom
+    right = width - margin_right
+
     lines = [
         f'<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}">',
         '<rect width="100%" height="100%" fill="white"/>',
-        f'<line x1="{margin_left}" y1="{height - margin_bottom}" ',
-        f'x2="{width - margin_right}" y2="{height - margin_bottom}" stroke="#111827"/>',
-        f'<line x1="{margin_left}" y1="{margin_top}" ',
-        f'x2="{margin_left}" y2="{height - margin_bottom}" stroke="#111827"/>',
-        f'<text x="{width / 2}" y="{height - 16}" text-anchor="middle" ',
-        f'font-family="Arial" font-size="14">{x_label}</text>',
-        f'<text x="18" y="{height / 2}" text-anchor="middle" ',
-        f'transform="rotate(-90 18 {height / 2})" ',
-        f'font-family="Arial" font-size="14">{y_label}</text>',
     ]
 
-    for index, (label, points) in enumerate(sorted(series.items())):
+    # Light gridlines drawn first so data and axes overlay them.
+    for tick in x_ticks:
+        x_px = sx(tick)
+        lines.append(
+            f'<line x1="{x_px:.2f}" y1="{margin_top}" x2="{x_px:.2f}" y2="{bottom}" '
+            f'stroke="{GRID_COLOUR}" stroke-width="1"/>'
+        )
+    for tick in y_ticks:
+        y_px = sy(tick)
+        lines.append(
+            f'<line x1="{margin_left}" y1="{y_px:.2f}" x2="{right}" y2="{y_px:.2f}" '
+            f'stroke="{GRID_COLOUR}" stroke-width="1"/>'
+        )
+
+    # Solid axes.
+    lines.append(
+        f'<line x1="{margin_left}" y1="{bottom}" x2="{right}" y2="{bottom}" stroke="#111827"/>'
+    )
+    lines.append(
+        f'<line x1="{margin_left}" y1="{margin_top}" x2="{margin_left}" y2="{bottom}" '
+        f'stroke="#111827"/>'
+    )
+
+    # Tick marks plus numeric labels on each axis.
+    for tick in x_ticks:
+        x_px = sx(tick)
+        lines.append(
+            f'<line x1="{x_px:.2f}" y1="{bottom}" x2="{x_px:.2f}" y2="{bottom + 4}" '
+            f'stroke="#111827" stroke-width="1"/>'
+        )
+        lines.append(
+            f'<text x="{x_px:.2f}" y="{bottom + 18}" text-anchor="middle" '
+            f'font-family="Arial" font-size="11" fill="#374151">{tick:g}</text>'
+        )
+    for tick in y_ticks:
+        y_px = sy(tick)
+        lines.append(
+            f'<line x1="{margin_left - 4}" y1="{y_px:.2f}" x2="{margin_left}" y2="{y_px:.2f}" '
+            f'stroke="#111827" stroke-width="1"/>'
+        )
+        lines.append(
+            f'<text x="{margin_left - 8}" y="{y_px + 4:.2f}" text-anchor="end" '
+            f'font-family="Arial" font-size="11" fill="#374151">{tick:g}</text>'
+        )
+
+    # Axis labels.
+    lines.append(
+        f'<text x="{width / 2}" y="{height - 16}" text-anchor="middle" '
+        f'font-family="Arial" font-size="14">{x_label}</text>'
+    )
+    lines.append(
+        f'<text x="18" y="{height / 2}" text-anchor="middle" '
+        f'transform="rotate(-90 18 {height / 2})" '
+        f'font-family="Arial" font-size="14">{y_label}</text>'
+    )
+
+    # Draw the data series.  Colour cycles through SERIES_COLOURS in label-sort
+    # order so series are visually stable across re-renders.
+    sorted_items = sorted(series.items())
+    for index, (label, points) in enumerate(sorted_items):
         colour = SERIES_COLOURS[index % len(SERIES_COLOURS)]
         path = " ".join(f"{sx(x):.2f},{sy(y):.2f}" for x, y in points)
         lines.append(f'<polyline points="{path}" fill="none" stroke="{colour}" stroke-width="2"/>')
-        legend_y = margin_top + 18 * index
+
+    # Render a legend box in the top-left corner where Schelling-style curves
+    # leave whitespace.  Width is sized to the longest label so the box does
+    # not clip; line-height keeps swatches and text aligned.
+    legend_x = margin_left + 10
+    legend_top = margin_top + 8
+    line_height = 16
+    swatch_length = 18
+    text_offset = 26
+    longest_label = max((len(label) for label in series.keys()), default=8)
+    legend_width = max(110, longest_label * 7 + text_offset + 12)
+    legend_height = line_height * len(sorted_items) + 10
+    lines.append(
+        f'<rect x="{legend_x - 4}" y="{legend_top - 4}" '
+        f'width="{legend_width}" height="{legend_height}" '
+        f'fill="white" fill-opacity="0.85" stroke="#d4d4d4" stroke-width="0.5" rx="3"/>'
+    )
+    for index, (label, _points) in enumerate(sorted_items):
+        colour = SERIES_COLOURS[index % len(SERIES_COLOURS)]
+        swatch_y = legend_top + 6 + line_height * index
+        text_y = swatch_y + 4
         lines.append(
-            f'<text x="{width - 180}" y="{legend_y}" font-family="Arial" '
-            f'font-size="13" fill="{colour}">{label}</text>'
+            f'<line x1="{legend_x}" y1="{swatch_y}" x2="{legend_x + swatch_length}" '
+            f'y2="{swatch_y}" stroke="{colour}" stroke-width="2.5"/>'
         )
+        lines.append(
+            f'<text x="{legend_x + text_offset}" y="{text_y}" '
+            f'font-family="Arial" font-size="12" fill="#111827">{label}</text>'
+        )
+
     lines.append("</svg>")
 
     output_path.parent.mkdir(parents=True, exist_ok=True)
